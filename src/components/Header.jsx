@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <div className="w-full h-[10vh] px-6 py-2 flex justify-between items-center bg-gradient-to-b from-black shadow-md">
       <div className="flex items-center">
-        <img 
+        <img
           src={Logo} 
           alt="CinemaGPT Logo" 
           className="h-12 sm:h-14" 
