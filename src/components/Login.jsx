@@ -1,7 +1,10 @@
 import React, { useState, useRef } from "react";
 import bg1 from "../assets/bg-1.jpg";
 import HeaderLogin from "./HeaderLogin";
-import { validateSignInData, validateSignUpData} from "../utils/validate";
+import Footer from "./Footer";
+import { validateSignInData, validateSignUpData } from "../utils/validate";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
   const [isSignIn, setIsSignUp] = useState(true);
@@ -24,23 +27,55 @@ const Login = () => {
 
   const handleFormSubmit = () => {
     if (isSignIn) {
-      const message = validateSignInData(email.current.value, password.current.value);
+      const message = validateSignInData(
+        email.current.value,
+        password.current.value
+      );
       setErrorMessage(message);
-      if (!message) {
-        // Sign In Logic Here
-        console.log("Sign In Successful");
-        clearInputs();
-      }
+      if (message) return;
+
+      // Sign in
+      signInWithEmailAndPassword(auth, email.current.value,
+        password.current.value)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + ": " + errorMessage);
+        });
+      console.log("Sign In Successful");
+      clearInputs();
     } else {
-      const message = validateSignUpData(name.current.value, email.current.value, password.current.value);
+      const message = validateSignUpData(
+        name.current.value,
+        email.current.value,
+        password.current.value
+      );
       setErrorMessage(message);
-      if (!message) {
-        // Sign Up Logic Here
-        console.log("Sign Up Successful");
-        clearInputs();
-      }
+      if (message) return;
+
+      // Sign up
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + ": " + errorMessage);
+        });
+      console.log("Sign Up Successful");
+      clearInputs();
     }
-  }
+  };
 
   return (
     <>
@@ -57,7 +92,10 @@ const Login = () => {
       ></div>
 
       <div className="flex justify-center items-center min-h-screen">
-        <form onSubmit={(e)=>e.preventDefault()} className="m-10 relative w-11/12 sm:w-96 bg-black bg-opacity-70 p-8 rounded-lg shadow-lg text-white">
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="m-10 relative w-11/12 sm:w-96 bg-black bg-opacity-70 p-8 rounded-lg shadow-lg text-white"
+        >
           <h1 className="text-3xl text-white font-bold mb-6 text-center">
             {isSignIn ? "Sign In" : "Sign Up"}
           </h1>
@@ -109,9 +147,10 @@ const Login = () => {
             />
           </div>
           {errorMessage && (
-            <div className="text-red-500 text-sm mt-2 flex items-start justify-start gap-1"><span className="material-symbols-outlined text-lg">
-            error
-            </span> {errorMessage}</div>
+            <div className="text-red-500 font-medium text-sm mt-2 flex items-center justify-start gap-1">
+              <span className="material-symbols-outlined text-lg">error</span>{" "}
+              {errorMessage}
+            </div>
           )}
           <button
             type="submit"
@@ -131,6 +170,8 @@ const Login = () => {
           </p>
         </form>
       </div>
+
+      <Footer/>
     </>
   );
 };
