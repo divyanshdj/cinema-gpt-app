@@ -3,13 +3,24 @@ import bg1 from "../assets/bg-1.jpg";
 import HeaderLogin from "./HeaderLogin";
 import Footer from "./Footer";
 import { validateSignInData, validateSignUpData } from "../utils/validate";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [isSignIn, setIsSignUp] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
-  const name = useRef(null);
+  const [name, setName] = useState("");
+
   const email = useRef(null);
   const password = useRef(null);
 
@@ -20,7 +31,7 @@ const Login = () => {
   };
 
   const clearInputs = () => {
-    if (name.current) name.current.value = "";
+    setName("");
     email.current.value = "";
     password.current.value = "";
   };
@@ -35,11 +46,15 @@ const Login = () => {
       if (message) return;
 
       // Sign in
-      signInWithEmailAndPassword(auth, email.current.value,
-        password.current.value)
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
         .then((userCredential) => {
           const user = userCredential.user;
           console.log(user);
+          navigate("/browse");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -50,7 +65,7 @@ const Login = () => {
       clearInputs();
     } else {
       const message = validateSignUpData(
-        name.current.value,
+        name,
         email.current.value,
         password.current.value
       );
@@ -65,7 +80,25 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+          updateProfile(user, {
+            displayName: name,
+            photoURL: "https://avatars.githubusercontent.com/u/124493395?v=4",
+          })
+            .then(() => {
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch(
+                addUser({
+                  uid: uid,
+                  email: email,
+                  displayName: displayName,
+                  photoURL: photoURL,
+                })
+              );
+              navigate("/browse");
+            })
+            .catch((error) => {
+              setErrorMessage(error.message);
+            });
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -109,7 +142,8 @@ const Login = () => {
               </label>
               <input
                 id="fullName"
-                ref={name}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 type="text"
                 placeholder="Enter your full name"
                 className="py-3 px-4 w-full border-2 border-white rounded-lg focus:outline-none bg-transparent text-white"
@@ -171,7 +205,7 @@ const Login = () => {
         </form>
       </div>
 
-      <Footer/>
+      <Footer />
     </>
   );
 };

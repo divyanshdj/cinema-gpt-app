@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import bg from "../assets/bg.jpg";
@@ -29,9 +29,7 @@ const Home = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           <div className="text-center">
-            <span className="text-4xl sm:text-5xl text-red-500">
-              🎥
-            </span>
+            <span className="text-4xl sm:text-5xl text-red-500">🎥</span>
             <h3 className="text-lg sm:text-xl font-semibold mt-4">
               Exclusive Content
             </h3>
@@ -40,9 +38,7 @@ const Home = () => {
             </p>
           </div>
           <div className="text-center">
-            <span className="text-4xl sm:text-5xl text-red-500">
-              🚀
-            </span>
+            <span className="text-4xl sm:text-5xl text-red-500">🚀</span>
             <h3 className="text-lg sm:text-xl font-semibold mt-4">
               Unlimited Streaming
             </h3>
@@ -51,9 +47,7 @@ const Home = () => {
             </p>
           </div>
           <div className="text-center">
-            <span className="text-4xl sm:text-5xl text-red-500">
-              🌟
-            </span>
+            <span className="text-4xl sm:text-5xl text-red-500">🌟</span>
             <h3 className="text-lg sm:text-xl font-semibold mt-4">
               Affordable Plans
             </h3>
@@ -70,7 +64,7 @@ const Home = () => {
         </button>
       </div>
 
-      <Footer/>
+      <Footer />
     </>
   );
 };
