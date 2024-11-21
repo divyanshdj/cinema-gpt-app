@@ -104,3 +104,22 @@
   font-size: 18px;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
 }
+
+/* Swiper Container Styling */
+.custom-swiper {
+  height: 100%; /* Full height of the container */
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .custom-swiper {
+    height: 70vh; 
+  }
+}
+@media (max-width: 500px) {
+  .custom-swiper {
+    height: 50vh; 
+  }
+}

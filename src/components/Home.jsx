@@ -7,7 +7,7 @@ import SwiperComponent from "./SwiperComponent";
 const Home = () => {
   return (
     <>
-      <div className="absolute w-full z-20">
+      <div className="absolute w-full z-50">
         <Header />
       </div>
 
@@ -19,7 +19,7 @@ const Home = () => {
         }}
       ></div>
 
-      <div className="absolute bottom-28 sm:bottom-24 w-full z-20 px-4 sm:px-8">
+      <div className="absolute bottom-28 sm:bottom-20 w-full z-20 px-4 sm:px-8">
         <SwiperComponent />
       </div>
 
