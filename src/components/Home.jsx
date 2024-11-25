@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import bg from "../assets/bg.jpg";
@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <>
       <div className="absolute w-full z-50">
-        <Header />
+        <Header pageType="main" />
       </div>
 
       <div

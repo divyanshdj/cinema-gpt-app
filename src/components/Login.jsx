@@ -1,6 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useRef } from "react";
 import bg1 from "../assets/bg-1.jpg";
-import HeaderLogin from "./HeaderLogin";
 import Footer from "./Footer";
 import { validateSignInData, validateSignUpData } from "../utils/validate";
 import {
@@ -12,6 +12,8 @@ import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { AVATAR_URL } from "../utils/constants";
+import Header from "./Header";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -53,7 +55,6 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
           navigate("/browse");
         })
         .catch((error) => {
@@ -61,7 +62,6 @@ const Login = () => {
           const errorMessage = error.message;
           setErrorMessage(errorCode + ": " + errorMessage);
         });
-      console.log("Sign In Successful");
       clearInputs();
     } else {
       const message = validateSignUpData(
@@ -82,7 +82,7 @@ const Login = () => {
           const user = userCredential.user;
           updateProfile(user, {
             displayName: name,
-            photoURL: "https://avatars.githubusercontent.com/u/124493395?v=4",
+            photoURL: AVATAR_URL,
           })
             .then(() => {
               const { uid, email, displayName, photoURL } = auth.currentUser;
@@ -105,7 +105,6 @@ const Login = () => {
           const errorMessage = error.message;
           setErrorMessage(errorCode + ": " + errorMessage);
         });
-      console.log("Sign Up Successful");
       clearInputs();
     }
   };
@@ -113,7 +112,7 @@ const Login = () => {
   return (
     <>
       <div className="absolute w-full z-20">
-        <HeaderLogin />
+        <Header pageType="login" />
       </div>
 
       <div
