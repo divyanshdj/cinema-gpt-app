@@ -57,7 +57,7 @@ const Header = ({ pageType }) => {
             <div className="flex items-center gap-2 sm:gap-4">
               <LanguageSelector />
               <Link to="/login">
-                <button className="py-1 sm:py-1 px-3 sm:px-5 text-xs sm:text-sm md:text-base font-bold text-black bg-white rounded-full border border-transparent shadow-sm hover:bg-gray-200 transition duration-300">
+                <button className="py-[0.1rem] sm:py-1 border-2 px-4 sm:px-6 text-md font-bold text-gray-900 bg-white rounded-full border-white hover:bg-gray-100 transition-colors duration-200 shadow-sm">
                   Sign In
                 </button>
               </Link>
@@ -71,14 +71,14 @@ const Header = ({ pageType }) => {
             <div className="flex items-center gap-4">
               <LanguageSelector />
               <Link to="/" className="sm:block hidden">
-                <button className="border-2 border-transparent py-1 px-4 text-xs sm:text-sm font-bold text-black bg-white rounded-full transition duration-300">
+                <button className="py-1 border-2 px-4 sm:px-6 text-md font-bold text-gray-900 bg-white rounded-full border-white hover:bg-gray-100 transition-colors duration-200 shadow-sm">
                   Back to Home
                 </button>
               </Link>
               <Link to="/" className="sm:hidden">
-                <span className="border border-white px-4 py-1 rounded-full text-black bg-white text-sm font-bold cursor-pointer">
+                <button className="py-1.5 px-4 text-sm font-medium text-gray-900 bg-white rounded-full border border-gray-200 hover:bg-gray-100 transition-colors duration-200 shadow-sm">
                   Home
-                </span>
+                </button>
               </Link>
             </div>
           </>
@@ -87,13 +87,17 @@ const Header = ({ pageType }) => {
         return (
           <>
             <Logo />
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center gap-4">
               <div className="flex items-center">
-                <img src={user?.photoURL} alt="Profile Logo" className="h-6 sm:h-8 md:h-10 brightness-125 cursor-pointer" />
+                <img 
+                  src={user?.photoURL} 
+                  alt="Profile" 
+                  className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover border-2 border-black cursor-pointer" 
+                />
               </div>
               <button
                 onClick={handleSignOut}
-                className="py-1 sm:py-1 px-3 sm:px-5 text-xs sm:text-sm md:text-base font-bold text-white bg-red-600 rounded-full border border-transparent shadow-sm hover:bg-red-500 transition duration-300"
+                className="py-1 px-4 sm:px-6 text-md font-bold text-white bg-red-600 rounded-full hover:bg-red-700 transition-colors duration-200 shadow-sm"
               >
                 Sign Out
               </button>
@@ -106,9 +110,11 @@ const Header = ({ pageType }) => {
   };
 
   return (
-    <div className={`w-full h-[10vh] px-4 sm:px-6 py-2 flex justify-between items-center ${pageType === "browse" ? "" : "bg-gradient-to-b from-black shadow-md"}`}>
+    <header className={`w-full h-16 px-4 sm:px-8 flex justify-between items-center fixed top-0 left-0 right-0 z-50 ${
+      pageType === "browse" ? "bg-white" : "bg-gradient-to-b from-black to-transparent"
+    }`}>
       {renderHeaderContent()}
-    </div>
+    </header>
   );
 };
 

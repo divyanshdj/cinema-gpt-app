@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef } from "react";
 import bg1 from "../assets/bg-1.jpg";
-import Footer from "./Footer";
 import { validateSignInData, validateSignUpData } from "../utils/validate";
 import {
   createUserWithEmailAndPassword,
@@ -203,8 +202,6 @@ const Login = () => {
           </p>
         </form>
       </div>
-
-      <Footer />
     </>
   );
 };
