@@ -122,10 +122,10 @@ const Login = () => {
         }}
       ></div>
 
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen selection:bg-none">
         <form
           onSubmit={(e) => e.preventDefault()}
-          className="m-10 relative w-11/12 sm:w-96 bg-black bg-opacity-70 p-8 rounded-lg shadow-lg text-white"
+          className="m-10 relative min-w-80 sm:w-[30vw] bg-black bg-opacity-70 p-8 rounded-lg shadow-lg text-white"
         >
           <h1 className="text-3xl text-white font-bold mb-6 text-center">
             {isSignIn ? "Sign In" : "Sign Up"}
@@ -199,6 +199,10 @@ const Login = () => {
             >
               {isSignIn ? "Sign up now." : "Sign in here."}
             </span>
+          </p>
+          <p className="mt-4 text-sm font-normal text-gray-600">
+            This page is protected by Google reCAPTCHA to ensure you're not a bot.
+            <p className="underline mt-2">Learn more.</p>
           </p>
         </form>
       </div>

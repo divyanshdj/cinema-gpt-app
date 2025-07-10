@@ -76,7 +76,7 @@ const Header = ({ pageType }) => {
                 </button>
               </Link>
               <Link to="/" className="sm:hidden">
-                <button className="py-1.5 px-4 text-sm font-medium text-gray-900 bg-white rounded-full border border-gray-200 hover:bg-gray-100 transition-colors duration-200 shadow-sm">
+                <button className="py-1.5 px-4 text-sm font-bold text-gray-900 bg-white rounded-full border border-gray-200 hover:bg-gray-100 transition-colors duration-200 shadow-sm">
                   Home
                 </button>
               </Link>
