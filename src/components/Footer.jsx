@@ -1,22 +1,40 @@
-import React from 'react'
+import React from "react";
 
 const Footer = () => {
-  return (
-    <>
-    <footer className="relative w-full bg-black text-white py-6 text-center text-sm">
-        <p>&copy; 2024 CinemaGPT. All rights reserved.</p>
-        <p className='mt-3 font-medium '>Code By Divyansh</p>
-        <div className="mt-3 flex justify-center space-x-4">
-          <p className="cursor-pointer hover:text-gray-400">
-            Privacy Policy
-          </p>
-          <p className="cursor-pointer hover:text-gray-400">
-            Terms of Service
-          </p>
-        </div>
-      </footer>
-    </>
-  )
-}
+  // Scroll smoothly to top
+  const scrollToTop = (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-export default Footer
+  return (
+    <footer className="w-full bg-black text-white py-12 px-6 text-center select-none">
+      <p className="text-base md:text-lg font-medium text-gray-300 mb-2">
+        &copy; 2024. All rights reserved.
+      </p>
+      <p className="text-base md:text-lg font-medium text-gray-300 mb-6">
+        Code by <span className="text-red-500 font-medium">Divyansh</span>
+      </p>
+      <div className="flex justify-center gap-10 text-base md:text-lg font-medium text-gray-300">
+        <a
+          href="/"
+          onClick={scrollToTop}
+          className="cursor-pointer hover:text-gray-400 transition-colors duration-300"
+          aria-label="Privacy Policy"
+        >
+          Privacy Policy
+        </a>
+        <a
+          href="/"
+          onClick={scrollToTop}
+          className="cursor-pointer hover:text-gray-400 transition-colors duration-300"
+          aria-label="Terms of Service"
+        >
+          Terms of Service
+        </a>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

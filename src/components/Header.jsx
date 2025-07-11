@@ -1,16 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
-import Logo from './Logo';
-import LanguageSelector from './LanguageSelector';
+import Logo from "./Logo";
+import LanguageSelector from "./LanguageSelector";
+import {
+  FaBars,
+  FaTimes,
+  FaHome,
+  FaSignInAlt,
+  FaSignOutAlt,
+} from "react-icons/fa";
 
 const Header = ({ pageType }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSignOut = () => {
     signOut(auth)
@@ -24,17 +32,14 @@ const Header = ({ pageType }) => {
       });
   };
 
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const { uid, email, displayName, photoURL } = user;
         dispatch(addUser({ uid, email, displayName, photoURL }));
-
-        if (pageType === "login") {
-          navigate("/browse");
-        }
-
-        if (pageType === "main") {
+        if (pageType === "login" || pageType === "main") {
           navigate("/browse");
         }
       } else {
@@ -44,65 +49,100 @@ const Header = ({ pageType }) => {
         }
       }
     });
-
     return () => unsubscribe();
   }, [dispatch, navigate, pageType]);
 
-  const renderHeaderContent = () => {
+  const menuBtn = `w-full flex items-center justify-start gap-3 px-6 py-4 text-white hover:bg-gray-700 transition`;
+  const redBtn = `text-red-400 hover:text-red-300 ${menuBtn}`;
+  const pillBtn = `rounded-full font-bold text-sm sm:text-base px-4 py-2 transition shadow-sm flex items-center gap-2`;
+
+  const renderMobileMenu = () => (
+    <div
+      className={`fixed inset-0 z-40 bg-black/95 transition-opacity duration-300 ease-in-out 
+      ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} sm:hidden`}
+      role="dialog"
+      aria-hidden={!isMenuOpen}
+    >
+      <div
+        className={`fixed top-0 left-0 w-full bg-gray-900 pt-20 transition-transform duration-300 ease-in-out 
+        ${isMenuOpen ? "translate-y-0" : "-translate-y-full"}`}
+      >
+        <nav className="flex flex-col text-left divide-y divide-gray-700">
+          {pageType === "browse" && (
+            <button
+              onClick={() => {
+                handleSignOut();
+                setIsMenuOpen(false);
+              }}
+              className={redBtn}
+            >
+              <FaSignOutAlt className="text-lg" />
+              Sign Out
+            </button>
+          )}
+
+          {pageType === "login" && (
+            <Link to="/" onClick={() => setIsMenuOpen(false)} className={menuBtn}>
+              <FaHome className="text-lg" />
+              Home
+            </Link>
+          )}
+
+          {pageType === "main" && (
+            <Link to="/login" onClick={() => setIsMenuOpen(false)} className={menuBtn}>
+              <FaSignInAlt className="text-lg" />
+              Sign In
+            </Link>
+          )}
+
+          <div className="px-6 py-6">
+            <LanguageSelector />
+          </div>
+        </nav>
+      </div>
+    </div>
+  );
+
+  const renderDesktopMenu = () => {
     switch (pageType) {
       case "main":
         return (
-          <>
-            <Logo />
-            <div className="flex items-center gap-2 sm:gap-4">
-              <LanguageSelector />
-              <Link to="/login">
-                <button className="py-[0.1rem] sm:py-1 border-2 px-4 sm:px-6 text-md font-bold text-gray-900 bg-white rounded-full border-white hover:bg-gray-100 transition-colors duration-200 shadow-sm">
-                  Sign In
-                </button>
-              </Link>
-            </div>
-          </>
+          <div className="flex items-center gap-4">
+            <LanguageSelector />
+            <Link to="/login" className={`${pillBtn} bg-white text-gray-900 hover:bg-gray-100`}>
+              <FaSignInAlt className="text-base" />
+              <span>Sign In</span>
+            </Link>
+          </div>
         );
       case "login":
         return (
-          <>
-            <Logo />
-            <div className="flex items-center gap-4">
-              <LanguageSelector />
-              <Link to="/" className="sm:block hidden">
-                <button className="py-1 border-2 px-4 sm:px-6 text-md font-bold text-gray-900 bg-white rounded-full border-white hover:bg-gray-100 transition-colors duration-200 shadow-sm">
-                  Back to Home
-                </button>
-              </Link>
-              <Link to="/" className="sm:hidden">
-                <button className="py-1.5 px-4 text-sm font-bold text-gray-900 bg-white rounded-full border border-gray-200 hover:bg-gray-100 transition-colors duration-200 shadow-sm">
-                  Home
-                </button>
-              </Link>
-            </div>
-          </>
+          <div className="flex items-center gap-4">
+            <LanguageSelector />
+            <Link to="/" className={`${pillBtn} bg-white text-gray-900 hover:bg-gray-100`}>
+              <FaHome className="text-base" />
+              <span>Back to Home</span>
+            </Link>
+          </div>
         );
       case "browse":
         return (
-          <>
-            <Logo />
-            <div className="flex items-center gap-4">
-              <div className="flex items-center">
-                <img 
-                  src={user?.photoURL} 
-                  alt="Profile" 
-                  className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover border-2 border-black cursor-pointer" 
-                />
-              </div>
-              <button
-                onClick={handleSignOut}
-                className="py-1 px-4 sm:px-6 text-md font-bold text-white bg-red-600 rounded-full hover:bg-red-700 transition-colors duration-200 shadow-sm"
-              >
-                Sign Out
-              </button>
-            </div>
-          </>
+          <div className="flex items-center gap-4">
+            {user?.photoURL && (
+              <img
+                src={user.photoURL}
+                alt="Profile"
+                className="w-9 h-9 rounded-full border border-gray-800"
+              />
+            )}
+            <button
+              onClick={handleSignOut}
+              className={`${pillBtn} bg-red-600 text-white hover:bg-red-700`}
+            >
+              <FaSignOutAlt className="text-base" />
+              <span>Sign Out</span>
+            </button>
+          </div>
         );
       default:
         return null;
@@ -110,11 +150,32 @@ const Header = ({ pageType }) => {
   };
 
   return (
-    <header className={`w-full h-16 px-4 sm:px-8 flex justify-between items-center fixed top-0 left-0 right-0 z-50 ${
-      pageType === "browse" ? "bg-white" : "bg-gradient-to-b from-black to-transparent"
-    }`}>
-      {renderHeaderContent()}
-    </header>
+    <>
+      <header className={`
+        fixed top-0 left-0 w-full z-50 h-16 px-4 sm:px-8 flex items-center justify-between
+        ${pageType === "browse" ? "bg-white shadow-md" : "bg-gradient-to-b from-black to-transparent"}
+        ${isMenuOpen ? "bg-black" : ""}
+      `}>
+        <Logo />
+        <div className="hidden sm:block">
+          {renderDesktopMenu()}
+        </div>
+        <div className="sm:hidden">
+          <button
+            onClick={toggleMenu}
+            className="p-2 rounded-full focus:outline-none bg-gray-800"
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? (
+              <FaTimes className="text-white text-lg" />
+            ) : (
+              <FaBars className="text-white text-lg" />
+            )}
+          </button>
+        </div>
+      </header>
+      {renderMobileMenu()}
+    </>
   );
 };
 
